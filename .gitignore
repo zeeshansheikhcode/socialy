@@ -34,6 +34,7 @@ migrate_working_dir/
 /android/
 /ios/
 /linux/
+/windows/
 /web/
 /.idea/
 /.dart_tool/
