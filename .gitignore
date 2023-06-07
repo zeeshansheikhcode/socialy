@@ -46,7 +46,7 @@ migrate_working_dir/
 /socialy.iml/
 /analysis_options.yaml/
 /.gitignore/
-
+/assets/
 
 # Symbolication related
 app.*.symbols
