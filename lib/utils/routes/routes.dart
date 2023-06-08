@@ -16,9 +16,9 @@ class Routes {
       case RoutesName.splashview :
         return MaterialPageRoute(builder: (BuildContext context)  =>   const SplashScreen());
       case RoutesName.signupview :
-        return MaterialPageRoute(builder: (BuildContext context)  =>   const SignupScreen());
+        return MaterialPageRoute(builder: (BuildContext context)  =>    SignupScreen());
      case RoutesName.loginview :
-        return MaterialPageRoute(builder: (BuildContext context)  =>   const LoginScreen());
+        return MaterialPageRoute(builder: (BuildContext context)  =>    LoginScreen());
      case RoutesName.homeView :
         return MaterialPageRoute(builder: (BuildContext context)  =>   const HomeView());
     //   case RoutesName.statusview :

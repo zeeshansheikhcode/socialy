@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3),
      () async
      {  
-       Navigator.pushNamed(context   , RoutesName.signupview);
+       Navigator.pushNamed(context   , RoutesName.loginview);
       // SplashService splashService = SplashService();
       //   dynamic auth = await splashService.checkingAuthentication();
        

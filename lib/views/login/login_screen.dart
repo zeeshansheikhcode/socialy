@@ -3,12 +3,30 @@ import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' ;
 
 import '../../components/reusable_button.dart';
+import '../../cubit/auth_cubit.dart';
 import '../../utils/routes/routes_name.dart';
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+   final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                padding:  EdgeInsets.symmetric(horizontal: 10.w),
                child: TextFormField(
                 style: const TextStyle(color: Colors.black),
-               // controller: authProvider.emailController,
+                controller: emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -120,7 +138,7 @@ class LoginScreen extends StatelessWidget {
                padding:  EdgeInsets.symmetric(horizontal: 10.w),
                child: TextFormField(
                  style: const TextStyle(color: Colors.black),
-              //  controller: authProvider.passwordController,
+                controller:passwordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -148,17 +166,42 @@ class LoginScreen extends StatelessWidget {
              ),
              ),
             SizedBox(height: 40.h,),
-            Center(
-              child: ReusableButton(
-                height: 50.h,
-                width: 300.h,
-                circular: 20,
-                ontap: () {
-                //  authProvider.logIn(context);
-                },
-                title: 'Login'.tr(),
-              ),
-            ),
+            BlocConsumer<AuthCubit, AuthState>(
+  listener: (context, state) {
+    if (state is AuthLoadedState) {
+      Navigator.pushReplacementNamed(context, RoutesName.homeView);
+    }
+  },
+  builder: (context, state) {
+    if (state is AuthInitial) {
+      return Center(
+        child: ReusableButton(
+          height: 50.h,
+          width: 300.h,
+          circular: 20,
+          ontap: () {
+            BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
+              emailController.text, passwordController.text);
+          },
+          title: 'Login'.tr(),
+        ),
+      );
+    }
+    
+    return Center(
+      child: ReusableButton(
+        height: 50.h,
+        width: 300.h,
+        circular: 20,
+        ontap: () {
+          BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
+            emailController.text, passwordController.text);
+        },
+        title: 'Login'.tr(),
+      ),
+    );
+  },
+),
              SizedBox(height: 50.h,),
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: 10.h),
