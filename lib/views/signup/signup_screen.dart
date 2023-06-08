@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +22,17 @@ class SignupScreen extends StatelessWidget {
               alignment: Alignment.topLeft,
                child: CircleAvatar(
                 backgroundColor: Colors.white,
-                 child: IconButton(onPressed: (){},
+                 child: IconButton(onPressed: ()
+                 {
+                  if(context.locale == const Locale('en', 'US'))
+                    {
+                      context.locale = const Locale('ur', 'PK');
+                    }
+                   else 
+                   {
+                     context.locale = const Locale('en', 'US');
+                   }
+                 },
                  icon:const Icon(Icons.arrow_back_rounded,color: Colors.black,)),
                ),
              ),
@@ -36,34 +49,43 @@ class SignupScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: 
                   [
-                    Text('Hello, Welcome Back',
+                    Text('Hello_Welcome',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24.sp,color: Colors.black),
-                    ),
+                    ).tr(),
                     SizedBox(height: 5.h,),
-                    Text('Happy to see you again, to use \nyour account please signup first.',
+                    Text('Happy_signup',
                     textAlign: TextAlign.left, 
                     maxLines: 2, 
                     overflow: TextOverflow.ellipsis,
                      style: TextStyle(fontSize: 15.sp,color: Colors.black),
-                    ),
+                    ).tr(),
                   ],
                 ),
                 SizedBox(
                    height: 140.h,
-                   width: 100.w,
-                  child: const Image(image: AssetImage('assets/images/sitting.png'))),
+                   width: 80.w,
+                   child:  context.locale == const Locale('ur', 'PK')
+                    ?
+                    Transform(
+                    alignment: Alignment.center,
+                     transform: Matrix4.rotationY(math.pi),
+                    child:const Image(image: AssetImage('assets/images/sitting.png')))
+                    : 
+                    const Image(image: AssetImage('assets/images/sitting.png')
+                  ),
+                 )
               ],
              ),
            ),
              SizedBox(height: 10.h,),
              Padding(
                padding:  EdgeInsets.symmetric(horizontal: 20.w),
-               child: Text('Email Address', 
+               child: Text('Email', 
                 style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14.sp,color: Colors.black),),
+                fontSize: 14.sp,color: Colors.black),).tr(),
              ),
              SizedBox(height: 10.h,),
              Padding(
@@ -89,7 +111,7 @@ class SignupScreen extends StatelessWidget {
                child: Text('Password', 
                 style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14.sp,color: Colors.black),),
+                fontSize: 14.sp,color: Colors.black),).tr(),
              ),
              SizedBox(height: 10.h,),
              Padding(
@@ -128,7 +150,7 @@ class SignupScreen extends StatelessWidget {
                 ontap: () {
                   //authProvider.createAccount(context);
                 },
-                title: 'Sign Up',
+                title: 'Sign_Up'.tr(),
               ),
             ),
              SizedBox(height: 50.h,),
@@ -145,7 +167,7 @@ class SignupScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.h),
                   child: Text(
-                    'Or Signup With',
+                    'OrSignupWith'.tr(),
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16.sp,
@@ -184,7 +206,7 @@ class SignupScreen extends StatelessWidget {
                    child:  Center(
                      child: Text('Google',
                      style: TextStyle(fontSize: 20.sp, color: Colors.white),
-                     ),
+                     ).tr(),
                    ),             
                   ),
                 ),
@@ -206,7 +228,7 @@ class SignupScreen extends StatelessWidget {
                    child:  Center(
                      child: Text('Facebook',
                      style: TextStyle(fontSize: 18.sp, color: Colors.white),
-                     ),
+                     ).tr(),
                    ),             
                   ),
                 ),

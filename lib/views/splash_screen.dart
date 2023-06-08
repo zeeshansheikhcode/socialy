@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:socialy/commons/app_strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../services/splash_services.dart';
 import '../utils/routes/routes_name.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,27 +19,46 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 3),
      () async
-     {  SplashService splashService = SplashService();
-        dynamic auth = await splashService.checkingAuthentication();
+     {  
+       Navigator.pushNamed(context   , RoutesName.signupview);
+      // SplashService splashService = SplashService();
+      //   dynamic auth = await splashService.checkingAuthentication();
        
-       if(auth == true) 
-        {  
-           Navigator.pushNamed(context  , RoutesName.homeView);
-        }
-        else 
-        {
-           Navigator.pushNamed(context   , RoutesName.loginview);
-        }
+      //  if(auth == true) 
+      //   {  
+      //      Navigator.pushNamed(context  , RoutesName.homeView);
+      //   }
+      //   else 
+      //   {
+      //      Navigator.pushNamed(context   , RoutesName.loginview);
+      //   }
      });
   }
   
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: Center(child: Text('Soialy Club',
-      style: heading
-      )
-     ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+           Center(child: Text('Socialy Club',
+           style: TextStyle(
+            color: Colors.black,
+            fontSize: 25.sp,
+           )
+           )),
+          SizedBox(height: 10.h,), 
+          Container(
+            decoration: const BoxDecoration(color: Colors.white),
+            height: 200.h,
+            width: 200.w,
+            child:const Center(
+              child: Image(image: AssetImage('assets/images/splashimg.png')) ,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
