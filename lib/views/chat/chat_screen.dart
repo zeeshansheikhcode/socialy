@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:talking/view/chat/widget/message_box.dart';
-import 'package:talking/viewmodel/chatroom_viewmodel.dart';
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
@@ -15,7 +12,6 @@ class _ChatScreenState extends State<ChatScreen> {
   
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatRoomViewModel>(context);
     return Scaffold(
       body:SafeArea(
         child:Column(
@@ -29,13 +25,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   onPressed: ()
                   {
-                    chatProvider.audioCallfunction(context);
+                    audioCallfunction(context);
                   },
                   icon:const Icon(Icons.call)
                   ),
                 IconButton(
                   onPressed: (){
-                    chatProvider.videoCallfunction(context);
+                    videoCallfunction(context);
                   },
                   icon:const Icon(Icons.video_call)
                   )
@@ -48,13 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               child:   
               StreamBuilder<QuerySnapshot>(
-              stream:  chatProvider.gettingStreams(),
-                // FirebaseFirestore.instance
-                // .collection('chatroom')
-                // .doc(chatProvider.realchatRoomId)
-                // .collection('chats')
-                // .orderBy("time", descending: false)
-                // .snapshots(),
+              stream:  gettingStreams(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot,) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child:  CircularProgressIndicator());

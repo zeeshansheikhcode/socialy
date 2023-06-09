@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' ;
 
 import '../../components/reusable_button.dart';
-import '../../cubit/auth_cubit.dart';
+import '../../cubit/auth/auth_cubit.dart';
 import '../../utils/routes/routes_name.dart';
 class LoginScreen extends StatefulWidget {
    const LoginScreen({super.key});

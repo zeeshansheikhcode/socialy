@@ -1,6 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../views/calls/audio_call.dart';
 import '../../views/calls/video_call.dart';
@@ -10,7 +18,6 @@ part 'chat_state.dart';
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
 
-  final  messageController = TextEditingController();
   String? callId = '';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,11 +33,11 @@ class ChatCubit extends Cubit<ChatState> {
       .doc(realchatRoomId)
       .collection('chats')
       .orderBy("time", descending: false)
-      .snapshots()) {
-   
-    yield snapshot; 
-  }
-}
+      .snapshots()) 
+      {
+        yield snapshot; 
+      }
+     }
  
  
  
@@ -44,7 +51,6 @@ class ChatCubit extends Cubit<ChatState> {
          if(xfile!=null)
         {
           imagefile =File(xfile.path);
-          notifyListeners();
           uploadimage();
          }
         }); 
@@ -83,9 +89,7 @@ class ChatCubit extends Cubit<ChatState> {
   chatRoomId = prefix + chatRoomId.substring(1);
   realchatRoomId = chatRoomId;
   callId = chatRoomId;
-
-
-}
+  }
    
   Future uploadimage() async
   {
@@ -102,7 +106,7 @@ class ChatCubit extends Cubit<ChatState> {
 
           });
 
-    var ref =FirebaseStorage.instance.ref().child('images').child("$filename.jpg");
+    var ref = FirebaseStorage.instance.ref().child('images').child("$filename.jpg");
     var uploadTask =  await ref.putFile(imagefile!).catchError((error) async
     { 
         await _firestore
@@ -127,39 +131,23 @@ class ChatCubit extends Cubit<ChatState> {
   
   }
 
-  void onSendMessage() async {
-    if (messageController.text.isNotEmpty) 
-    {
-       
+  void onSendMessage(String message) async {
+
         Map<String, dynamic> usermessages = {
         "userId" : _auth.currentUser!.uid,
         "sendby": _auth.currentUser!.email,
-        "message": messageController.text,
+        "message": message,
         "type" : "text",
         "time": DateTime.now(),
         "sent" : 1
-      };
-     
-         
-         await _firestore
+        };
+           
+          await _firestore
           .collection('chatroom')
           .doc(realchatRoomId)
           .collection('chats')
           .add(usermessages);
-       
-
-       messageController.clear();
-       final messages = MessageModel(
-          userId:  usermessages["userId"],
-         sendby :  usermessages["sendby"],
-       message  :  usermessages["message"],
-          type  :  usermessages["type"],
-      dateTime  :  usermessages["time"],
-        sent    :  usermessages["sent"]
-          );
      
-         
     }
-  }
 
 }
