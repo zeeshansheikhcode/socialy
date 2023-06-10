@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
-import '../../components/reusable_button.dart';
+import '../../../components/reusable_button.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

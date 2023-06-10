@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../cubit/chat/chat_cubit.dart';
-import '../../utils/routes/routes_name.dart';
+import '../../../cubit/chat/chat_cubit.dart';
+import '../../../utils/routes/routes_name.dart';
 
 class SearchWidget extends StatelessWidget {
   final String img;

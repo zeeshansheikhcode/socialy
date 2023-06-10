@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/chat/chat_cubit.dart';
-import 'package:socialy/views/chat/widget/message_box.dart';
+import 'package:socialy/views/chat/chat_screen/widget/message_box.dart';
 
 import '../calls/audio_call.dart';
 import '../calls/video_call.dart';

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart' as zego;
 
-import '../../utils/utils.dart';
+import '../../../utils/utils.dart';
 final String localUserID = math.Random().nextInt(10000).toString();
 class CallPage extends StatelessWidget {
   final String callID;
