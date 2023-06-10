@@ -3,7 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:socialy/cubit/auth_cubit.dart';
+import 'package:socialy/cubit/auth/auth_cubit.dart';
+import 'package:socialy/cubit/chat/chat_cubit.dart';
 import 'package:socialy/utils/routes/routes.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
@@ -38,9 +39,9 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => AuthCubit(),
             ),
-            // BlocProvider(
-            //   create: (context) => SubjectBloc(),
-            // ),
+            BlocProvider(
+              create: (context) => ChatCubit(),
+            ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

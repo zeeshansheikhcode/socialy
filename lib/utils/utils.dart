@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class Utils
 {
-   static int appId =  478672287; // enter your id
-   static String appSignin = "8c0c20e92d1d38b7ab50812c8bb4a152d0acdc09d4f92bc054b4d70554ca4edd" ;
+   static int appId =  1278810159; // enter your id
+   static String appSignin = "e6379f96bde265d667952d69c3ad55cabefe53dca5d129efe91323c446d39aed" ;
    static  showSnackBar(String message,BuildContext context)
    {
      return ScaffoldMessenger.of(context).showSnackBar(

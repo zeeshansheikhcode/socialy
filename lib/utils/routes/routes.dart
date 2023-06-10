@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
+import '../../views/chat/chat_screen.dart';
 import '../../views/home/home_view.dart';
 import '../../views/login/login_screen.dart';
 import '../../views/signup/signup_screen.dart';
@@ -16,15 +17,15 @@ class Routes {
       case RoutesName.splashview :
         return MaterialPageRoute(builder: (BuildContext context)  =>   const SplashScreen());
       case RoutesName.signupview :
-        return MaterialPageRoute(builder: (BuildContext context)  =>    SignupScreen());
+        return MaterialPageRoute(builder: (BuildContext context)  =>    const SignupScreen());
      case RoutesName.loginview :
-        return MaterialPageRoute(builder: (BuildContext context)  =>    LoginScreen());
+        return MaterialPageRoute(builder: (BuildContext context)  =>    const LoginScreen());
      case RoutesName.homeView :
-        return MaterialPageRoute(builder: (BuildContext context)  =>   const HomeView());
+        return MaterialPageRoute(builder: (BuildContext context)  =>    HomeView());
     //   case RoutesName.statusview :
     //     return MaterialPageRoute(builder: (BuildContext context)  =>   const StatusView());
-    //   case RoutesName.chatview :
-    //     return MaterialPageRoute(builder: (BuildContext context)  => const  ChatScreen());
+      case RoutesName.chatview :
+        return MaterialPageRoute(builder: (BuildContext context)  => const  ChatScreen());
     //  case RoutesName.chatpagesqlite :
     //     return MaterialPageRoute(builder: (BuildContext context)  =>   const ChatPage());
    

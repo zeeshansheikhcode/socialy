@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:socialy/cubit/auth_cubit.dart';
+import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
 import '../../components/reusable_button.dart';
