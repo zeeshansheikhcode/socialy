@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ReusableButton extends StatelessWidget {
   final double? height;
   final double? width;
@@ -21,6 +22,7 @@ class ReusableButton extends StatelessWidget {
     return GestureDetector(
       onTap: ontap,
       child: Container(
+       margin: EdgeInsets.symmetric(horizontal: 10.w),
        height: height,
        width: width,
        decoration: BoxDecoration(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/ui_helpers.dart';
-import 'package:socialy/views/home/post_widget.dart';
-import 'package:socialy/views/home/status_widget.dart';
+import 'package:socialy/views/home/widgets/post_widget.dart';
+import 'package:socialy/views/home/widgets/status_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
