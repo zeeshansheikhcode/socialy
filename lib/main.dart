@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/cubit/chat/chat_cubit.dart';
-import 'package:socialy/views/add/add_screen.dart';
+import 'package:socialy/views/profile/user_profile.dart';
 
 import 'firebase_options.dart';
 
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
-            home:const AddScreen(),
+            home:const UserProfile(),
             // initialRoute: RoutesName.splashview,
             // onGenerateRoute: Routes.generateRoute,
           ),
