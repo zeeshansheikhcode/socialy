@@ -13,6 +13,13 @@ class ChatLoadingState extends ChatState {
 
 }
 class ChatLoadedState extends ChatState {
+   QuerySnapshot? snapshot;
+   String? chatRoomId;
+   bool? isSent;
+   List<dynamic>? searchResult;
+   ChatLoadedState({this.snapshot,this.isSent,this.searchResult, this.chatRoomId});
+  @override
+  List<Object> get props => [snapshot!,chatRoomId!,isSent!,searchResult!];
 
 }
 

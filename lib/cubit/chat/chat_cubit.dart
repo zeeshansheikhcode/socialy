@@ -10,9 +10,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../views/calls/audio_call.dart';
-import '../../views/calls/video_call.dart';
-
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
@@ -21,29 +18,30 @@ class ChatCubit extends Cubit<ChatState> {
   String? callId = '';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  List _searchResult = [];
+  List  get searchresult => _searchResult;
   File? imagefile;
   String? realchatRoomId ;
  
-
- 
-
-   Stream<QuerySnapshot> gettingStreams() async* {
+  Stream<QuerySnapshot> gettingStreams(String roomId) async* {
    await for (QuerySnapshot snapshot in FirebaseFirestore.instance
       .collection('chatroom')
-      .doc(realchatRoomId)
+      .doc(roomId)
       .collection('chats')
       .orderBy("time", descending: false)
       .snapshots()) 
-      {
+      { 
         yield snapshot; 
+   
       }
+       
      }
  
  
  
   Future getImage() async
   {
-       
+       emit(ChatLoadingState());
         ImagePicker picker = ImagePicker();
 
          await picker.pickImage(source: ImageSource.gallery).then((xfile) 
@@ -58,23 +56,24 @@ class ChatCubit extends Cubit<ChatState> {
     
   }
     
-  void audioCallfunction(context)
-  {
+  // void audioCallfunction(String id)
+  // {
      
-     Navigator.push(context,
-     MaterialPageRoute(builder: (context) => AudioCallingPage(callingId: callId!))) ;
+  //    Navigator.push(context,
+  //    MaterialPageRoute(builder: (context) => AudioCallingPage(callingId: callId!))) ;
            
-  }
+  // }
 
-   void videoCallfunction(context)
-  {
+  //  void videoCallfunction(String id)
+  // {
     
-     Navigator.push(context,
-     MaterialPageRoute(builder: (context) => CallPage(callID: callId!))) ;
+  //    Navigator.push(context,
+  //    MaterialPageRoute(builder: (context) => CallPage(callID: callId!))) ;
            
-  }
+  // }
 
-  String generateChatRoomId(String user2email) {
+  void generateChatRoomId(String user2email) async{
+   emit(ChatLoadingState());
   final currentuser1 =  FirebaseAuth.instance.currentUser!.email;
   final user1email   =  currentuser1;
   String username1 = user1email!.replaceAll('@gmail.com', '');
@@ -89,6 +88,7 @@ class ChatCubit extends Cubit<ChatState> {
   chatRoomId = prefix + chatRoomId.substring(1);
   realchatRoomId = chatRoomId;
   callId = chatRoomId;
+  emit(ChatLoadedState(chatRoomId: chatRoomId,searchResult: const []));
   }
    
   Future uploadimage() async
@@ -128,11 +128,13 @@ class ChatCubit extends Cubit<ChatState> {
             "message" : imageUrl
           });
      }
+     emit(ChatLoadedState(isSent: true));
   
   }
 
   void onSendMessage(String message) async {
-
+         emit(ChatLoadingState());
+         try{
         Map<String, dynamic> usermessages = {
         "userId" : _auth.currentUser!.uid,
         "sendby": _auth.currentUser!.email,
@@ -147,7 +149,31 @@ class ChatCubit extends Cubit<ChatState> {
           .doc(realchatRoomId)
           .collection('chats')
           .add(usermessages);
-     
+          emit(ChatLoadedState(isSent: true));
+         }
+         catch(e)
+         {
+          emit(ChatErrorState(e.toString()));
+         }
     }
+   
+
+  void searchFromFirebase(String query) async {
+       
+       try 
+       {  emit(ChatLoadingState());
+        final result = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('email', isEqualTo: query)
+        .get();
+        _searchResult = result.docs.map((e) => e.data()).toList();
+         emit(ChatLoadedState(searchResult: _searchResult));
+       }
+       catch(e)
+       {
+         emit(ChatErrorState(e.toString()));
+       }
+        
+  }
 
 }
