@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
-import '../../views/chat/chat_screen/chat_screen.dart';
-import '../../views/home/home_view.dart';
 import '../../views/auth/login/login_screen.dart';
 import '../../views/auth/signup/signup_screen.dart';
+import '../../views/chat/chat_screen/chat_screen.dart';
+import '../../views/home/home/home_view.dart';
 import '../../views/splash_screen.dart';
 class Routes {
 

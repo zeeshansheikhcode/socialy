@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:socialy/views/add/add_screen.dart';
 
 import '../services/splash_services.dart';
 import '../utils/routes/routes_name.dart';
@@ -27,7 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
        
        if(auth == true) 
         {  
-           Navigator.pushNamed(context  , RoutesName.homeView);
+           Navigator.push(context  , MaterialPageRoute(builder: (context)=> const AddScreen()));
+           //Navigator.pushNamed(context  , RoutesName.homeView);
         }
         else 
         {
