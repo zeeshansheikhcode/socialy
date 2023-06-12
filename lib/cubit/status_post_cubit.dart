@@ -43,13 +43,6 @@ class StatusPostCubit extends Cubit<StatusPostState> {
         pickedFile.path, outPath,
          quality: 10,
        );
- 
-  //return result;
-      // var result = await FlutterImageCompress.compressAndGetFile(
-      //   pickedFile.path,
-      //   pickedFile.path,
-      //   quality: 5,
-      // );
       _imageFile = File(result1!.path);
       isLoading = true;
       _uploadImage(isStatus);

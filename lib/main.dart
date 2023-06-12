@@ -6,8 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/cubit/chat/chat_cubit.dart';
 import 'package:socialy/cubit/status_post_cubit.dart';
-import 'package:socialy/views/home/home/home_view.dart';
+import 'package:socialy/views/profile/user_profile.dart';
 
+import 'cubit/user/user_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
              BlocProvider(
               create: (context) => StatusPostCubit(),
             ),
+             BlocProvider(
+              create: (context) => UserCubit(),
+            ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
-            home:const HomeView(),
+            home:const UserProfile(),
             // initialRoute: RoutesName.splashview,
             // onGenerateRoute: Routes.generateRoute,
           ),
