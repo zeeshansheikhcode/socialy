@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/post_model.dart';
 import '../models/story_model.dart';
@@ -78,19 +79,20 @@ class StatusPostCubit extends Cubit<StatusPostState> {
      getStoriesPosts();
       }
     else 
-    {
+    { final String postid = const Uuid().v1();
       final imageName = DateTime.now().microsecondsSinceEpoch.toString();
       final storageReference = FirebaseStorage.instance.ref().child('userspost/$imageName');
       await storageReference.putFile(_imageFile!);
       final downloadUrl = await storageReference.getDownloadURL();
       await _firestore.collection('posts')
-          .doc()
+          .doc(postid)
           .set(
             {
               "userId"     : _auth.currentUser!.uid,
               "useremail"  : _auth.currentUser!.email,
               "type"       :  "photo",
               "photoUrl"   :  downloadUrl,
+              "postId"     :  postid
             }
           );
      isLoading = false;
@@ -125,8 +127,16 @@ class StatusPostCubit extends Cubit<StatusPostState> {
       emit(StatusPostErrorState(e.toString()));
     }
   }
-  
-
+  deletePosts(PostModel postModel) async
+  {  
+    Reference storageReference = FirebaseStorage.instance.refFromURL(postModel.photoUrl!);
+    storageReference.delete();
+     await _firestore.collection('posts')
+          .doc(postModel.postId)
+          .delete();
+    getStoriesPosts();
+  } 
+ 
   // Getting Stories
   void getStoriesPosts() async
   {
@@ -135,6 +145,8 @@ class StatusPostCubit extends Cubit<StatusPostState> {
      allEmails.clear();
      uniqueEmail.clear();
      stories.clear();
+     _posts.clear();
+     
     final  CollectionReference activeStories =  _firestore.collection('stories');
     QuerySnapshot querySnapshot = await activeStories.get();
     for (DocumentSnapshot doc in querySnapshot.docs) {
@@ -171,39 +183,13 @@ class StatusPostCubit extends Cubit<StatusPostState> {
         useremail: doc['useremail'],
         type: doc['type'],
         photoUrl: doc['photoUrl'] ?? 'No Photo Url',
+        postId: doc['postId'],
         ),
       );
     }
       emit(StatusPostLoadedState(allStories:allStories,allPost: _posts)); 
     }
 
-  //  //Getting Posts
-  //  void getPosts() async
-  // {
-    
-  //   try
-  //   { emit(StatusPostLoadingState());
-  //   //   final  CollectionReference activeStories =  _firestore.collection('posts');
-  //   // QuerySnapshot querySnapshot = await activeStories.get();
-  //   // for (DocumentSnapshot doc in querySnapshot.docs) {
-  //   //  _posts.add(
-  //   //     PostModel(
-  //   //     userId: doc['userId'],
-  //   //     useremail: doc['useremail'],
-  //   //     type: doc['type'],
-  //   //     photoUrl: doc['photoUrl'] ?? 'No Photo Url',
-  //   //     ),
-  //   //   );
-  //   // }
-  //   print(_posts);
-  //      emit(StatusPostLoadedState(allPost: _posts,allStories: allStories)); 
-  //   }
-  //   catch(e) 
-  //   {
-  //     emit(StatusPostErrorState(e.toString()));
-  //   }
-    
-  //  }  
 }
 
   

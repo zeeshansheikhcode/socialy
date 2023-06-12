@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/cubit/chat/chat_cubit.dart';
 import 'package:socialy/cubit/status_post_cubit.dart';
-import 'package:socialy/views/profile/user_profile.dart';
+import 'package:socialy/views/add/add_screen.dart';
 
 import 'cubit/user/user_cubit.dart';
 import 'firebase_options.dart';
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
-            home:const UserProfile(),
+            home:const AddScreen(),
             // initialRoute: RoutesName.splashview,
             // onGenerateRoute: Routes.generateRoute,
           ),

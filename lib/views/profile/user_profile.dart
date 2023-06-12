@@ -46,7 +46,7 @@ class _UserProfileState extends State<UserProfile> {
                   backgroundColor: Colors.blue,
                   maxRadius: 50,
                   foregroundImage: NetworkImage(state.userModel!.photoUrl!),
-                  //child: Text("A"),
+                
                 ),
               )),
               verticalSpaceTiny,

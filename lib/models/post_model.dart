@@ -5,11 +5,13 @@ class PostModel
   final String? useremail;
   final String? type;
   final String? photoUrl;
+  final String? postId;
   PostModel({
    required this.userId,
    required this.useremail,
-    this.photoUrl,
+   required this.photoUrl,
    required this.type,
+   required this.postId
     });
 
   Map<String, dynamic> toJson() {
@@ -18,6 +20,7 @@ class PostModel
       'useremail'  : useremail,
       'type'       : type, 
       'photoUrl'   : photoUrl,
+      'postId'     : postId
      };
   }
 
@@ -27,6 +30,7 @@ class PostModel
       useremail   : json['useremail'],
       type        : json['type'],
       photoUrl    : json['photoUrl'], 
+      postId      : json['postId']   
     );
   }
 }
