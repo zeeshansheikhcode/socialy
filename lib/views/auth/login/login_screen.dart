@@ -156,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextButton(
                   onPressed: ()
                   {
-                    Navigator.pushNamed(context, RoutesName.signupview);
+                    Navigator.pushReplacementNamed(context, RoutesName.signupview);
                   },
                   child: Text('RegisterYourself', 
                   style: TextStyle(
@@ -168,34 +168,20 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 40.h,),
             BlocConsumer<AuthCubit, AuthState>(
   listener: (context, state) {
-    if (state is AuthLoadedState) {
-      Navigator.pushReplacementNamed(context, RoutesName.homeView);
-    }
   },
   builder: (context, state) {
-    if (state is AuthInitial) {
-      return Center(
-        child: ReusableButton(
-          height: 50.h,
-          width: 300.h,
-          circular: 20,
-          ontap: () {
-            BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
-              emailController.text, passwordController.text);
-          },
-          title: 'Login'.tr(),
-        ),
-      );
-    }
-    
     return Center(
       child: ReusableButton(
         height: 50.h,
         width: 300.h,
         circular: 20,
         ontap: () {
-          BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
+          
+            BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
             emailController.text, passwordController.text);
+            
+          Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
+  
         },
         title: 'Login'.tr(),
       ),

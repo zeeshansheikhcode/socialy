@@ -4,11 +4,13 @@ class UserModel
   final String? useremail;
   final String? name;
   final String? photoUrl;
+  final List? followers;
   UserModel({
    required this.userId,
    required this.useremail,
    required this.name,
    required this.photoUrl,
+   required this.followers,
     });
 
   Map<String, dynamic> toJson() {
@@ -17,6 +19,7 @@ class UserModel
       'useremail'  : useremail,
       'name'       : name, 
       'photoUrl'   : photoUrl,
+      'followers'  : followers
      };
   }
 
@@ -26,6 +29,7 @@ class UserModel
       useremail   : json['useremail'],
       name        : json['name'],
       photoUrl    : json['photoUrl'], 
+      followers   : json['followers'] 
     );
   }
 }

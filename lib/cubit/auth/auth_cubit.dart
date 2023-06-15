@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_state.dart';
@@ -10,7 +15,38 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthLoadingState());
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
-  String? message;
+  String? message ;
+  String? picUrl = 'No Pic';
+  File? userImage;
+  final picker = ImagePicker();
+  Future<void> uploadProfilePic() async
+  {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+       try {
+        picUrl = null;
+         print('inside');
+        final filePath = pickedFile.path;
+        final lastIndex = filePath.lastIndexOf( RegExp(r'.jpg'));
+        final splitted = filePath.substring(0, (lastIndex));
+        final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+        var result1 = await FlutterImageCompress.compressAndGetFile(
+        pickedFile.path, outPath,
+         quality: 10,
+       );
+       userImage = File(result1!.path);
+       final imageName = _auth.currentUser!.uid;
+      final storageReference = FirebaseStorage.instance.ref().child('profilephotos/$imageName');
+      await storageReference.putFile(userImage!);
+      picUrl = await storageReference.getDownloadURL();
+      print('picUrl $picUrl');
+       }
+      catch(e) 
+      {
+        emit(AuthErrorState(e.toString()));
+      }
+  }
+  }
    Future<dynamic> signInWithEmailAndPassword( String email, String password) async 
    {
     try 
@@ -26,10 +62,17 @@ class AuthCubit extends Cubit<AuthState> {
                        .doc(user.user!.uid)
                        .get()
                        .then((value) {
-                       return value.data()!['email'];
+                       return [
+                        value.data()!['email'],
+                        value.data()!['username'],
+                        value.data()!['profilePic'],
+                        value.data()!['userId'],
+                       ];
                        });               
-        prefs.setString('Email'    , email);
-        prefs.setString('Password' , password);
+        prefs.setString('email'    ,  useremail[0]);
+        prefs.setString('username' ,  useremail[1]);
+        prefs.setString('profilePic', useremail[2]);
+        prefs.setString('userId',     useremail[3]);
       emit(const AuthLoadedState(true));
     } 
     on FirebaseAuthException catch (e) 
@@ -68,7 +111,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
 
-   Future<dynamic> registerNewUser(String email,  String password) async {
+   Future<dynamic> registerNewUser(String email,  String password,String username) async {
     try {
       emit(AuthLoadingState());
       final user = await _auth.createUserWithEmailAndPassword(
@@ -79,13 +122,19 @@ class AuthCubit extends Cubit<AuthState> {
         .doc(user.user!.uid)
         .set(
           {
-             "email"    : email,
-             "password" : password,
+             "email"       : email,
+             "password"    : password,
+             "userId"      : user.user!.uid,
+             "username"    : username,
+             "profilePic"  : picUrl,
+             "followers"   : []
           }
         );
      SharedPreferences prefs = await SharedPreferences.getInstance();               
-     prefs.setString('Email'    , email);
-     prefs.setString('Password' , password);
+     prefs.setString('email'    , email);
+     prefs.setString('username' , username);
+     prefs.setString('profilePic', picUrl!);
+     prefs.setString('userId',     user.user!.uid);
      emit(const AuthLoadedState(true));
      
     } 
@@ -211,16 +260,16 @@ class AuthCubit extends Cubit<AuthState> {
 
  
 
-   Future<dynamic> forgotPassword(String email) async {
-    try {
-      final result =  await  _auth.sendPasswordResetEmail(
-      email    : email,
-      );
-      return true;
-    } catch (e) {
-      return e.toString();
-    }
-  }
+  //  Future<dynamic> forgotPassword(String email) async {
+  //   try {
+  //     final result =  await  _auth.sendPasswordResetEmail(
+  //     email    : email,
+  //     );
+  //     return true;
+  //   } catch (e) {
+  //     return e.toString();
+  //   }
+  // }
   Future<bool> logOut() async {
     try {
 

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/post_model.dart';
@@ -21,6 +22,8 @@ class StatusPostCubit extends Cubit<StatusPostState> {
   List<StoryModel>   get stories => _stories; 
   final List<PostModel> _posts = [];
   List<PostModel>   get posts => _posts; 
+  final List<Comment> _comments = [];
+  List<Comment>   get comments => _comments; 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<String> allEmails =[];
@@ -73,10 +76,11 @@ class StatusPostCubit extends Cubit<StatusPostState> {
               "type"       :  "photo",
               "statusText" :  "No Text",
               "photoUrl"   :  downloadUrl,
+              "likes"      : []
             }
           );
      isLoading = false;
-     getStoriesPosts();
+     getStoriePosts();
       }
     else 
     { final String postid = const Uuid().v1();
@@ -92,11 +96,12 @@ class StatusPostCubit extends Cubit<StatusPostState> {
               "useremail"  : _auth.currentUser!.email,
               "type"       :  "photo",
               "photoUrl"   :  downloadUrl,
-              "postId"     :  postid
+              "postId"     :  postid,
+              "likes"      : []
             }
           );
      isLoading = false;
-     getStoriesPosts();
+     getStoriePosts();
      }
     } catch (e) {
       emit(StatusPostErrorState(e.toString()));
@@ -105,9 +110,11 @@ class StatusPostCubit extends Cubit<StatusPostState> {
  //Upload Status
   void uploadStatus(String statusText) async 
   {
-     emit(StatusPostLoadingState());
+    
     try 
-    {
+    { 
+       emit(StatusPostLoadingState());
+      final  SharedPreferences prefs = await SharedPreferences.getInstance();
       await _firestore.collection('stories')
           .doc()
           .set(
@@ -117,9 +124,12 @@ class StatusPostCubit extends Cubit<StatusPostState> {
               "type"       :  "text",
               "statusText" :  statusText,
               "photoUrl"   :  "No Url",
+              "profilePic" : prefs.getString('profilePic'),
+              "dateTime"   : DateTime.now(),
+              "username"   : prefs.getString('username'),
             }
           );
-     getStoriesPosts();
+     getStoriePosts();
      
     }
     catch(e)
@@ -134,11 +144,11 @@ class StatusPostCubit extends Cubit<StatusPostState> {
      await _firestore.collection('posts')
           .doc(postModel.postId)
           .delete();
-    getStoriesPosts();
+    getStoriePosts();
   } 
  
   // Getting Stories
-  void getStoriesPosts() async
+  void getStoriePosts() async
   {
     emit(StatusPostLoadingState());
      allStories.clear();
@@ -150,18 +160,24 @@ class StatusPostCubit extends Cubit<StatusPostState> {
     final  CollectionReference activeStories =  _firestore.collection('stories');
     QuerySnapshot querySnapshot = await activeStories.get();
     for (DocumentSnapshot doc in querySnapshot.docs) {
+      Timestamp timestamp = doc['dateTime'];
+    DateTime dateTime = timestamp.toDate();
      _stories.add(
         StoryModel(
         userId: doc['userId'],
         useremail: doc['useremail'],
         type: doc['type'],
         statusText: doc['statusText'] ?? 'No Status title',
-        photoUrl: doc['photoUrl'] ?? 'No Photo Url',
+        photoUrl: doc['photoUrl'] ?? 'No Photo Url', 
+        dateTime: dateTime,
+        profilePic: doc['profilePic'],
+        username: doc['username'],
         ),
       );
       allEmails.add(doc['useremail']);
     }
     uniqueEmail = allEmails.toSet().toList();
+    _stories.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
    for(int i=0; i <uniqueEmail.length; i++)
     {   final List<StoryModel> userStories = [];
         for(int j=0 ;j < stories.length; j++)
@@ -174,7 +190,10 @@ class StatusPostCubit extends Cubit<StatusPostState> {
        } 
        allStories.add(userStories);
      }
-    final  CollectionReference activePosts =  _firestore.collection('posts');
+     _stories.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
+  
+     
+       final  CollectionReference activePosts =  _firestore.collection('posts');
     QuerySnapshot querySnapshotPost = await activePosts.get();
     for (DocumentSnapshot doc in querySnapshotPost.docs) {
      _posts.add(
@@ -184,10 +203,175 @@ class StatusPostCubit extends Cubit<StatusPostState> {
         type: doc['type'],
         photoUrl: doc['photoUrl'] ?? 'No Photo Url',
         postId: doc['postId'],
+        likes: doc['likes'],
         ),
       );
     }
-      emit(StatusPostLoadedState(allStories:allStories,allPost: _posts)); 
+      print(_posts);
+      emit(StatusPostLoadedState(allStories:allStories, allPost: _posts));
+    }
+  //  getPostsAndStories()
+  //  {
+  //   emit(StatusPostLoadingState());
+  //   getStories();
+  //   getPosts();
+    
+  //  }
+//    getStories() async 
+//    {
+//    emit(StatusLoadingState());
+//   allStories.clear();
+//   allEmails.clear();
+//   uniqueEmail.clear();
+//   final CollectionReference activeStories = _firestore.collection('stories');
+//   QuerySnapshot querySnapshot = await activeStories.get();
+
+//   for (DocumentSnapshot doc in querySnapshot.docs) {
+//     Timestamp timestamp = doc['dateTime'];
+//     DateTime dateTime = timestamp.toDate();
+
+//     _stories.add(
+//       StoryModel(
+//         userId: doc['userId'],
+//         useremail: doc['useremail'],
+//         type: doc['type'],
+//         statusText: doc['statusText'] ?? 'No Status title',
+//         photoUrl: doc['photoUrl'] ?? 'No Photo Url',
+//         dateTime: dateTime,
+//         profilePic: doc['profilePic'],
+//         username: doc['username'],
+//       ),
+//     );
+
+//     allEmails.add(doc['useremail']);
+//   }
+
+//   uniqueEmail = allEmails.toSet().toList();
+//   _stories.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
+
+//   for (int i = 0; i < uniqueEmail.length; i++) {
+//     final List<StoryModel> userStories = [];
+
+//     for (int j = 0; j < _stories.length; j++) {
+//       if (uniqueEmail[i] == _stories[j].useremail.toString()) {
+//         userStories.add(_stories[j]);
+//       }
+//     }
+
+//     allStories.add(userStories);
+//   }
+//   emit(StatusLoadedState(allStories: allStories));
+// }
+
+//     getPosts() async
+//     {  emit(PostLoadingState());
+//       _posts.clear();
+//       print('in post');
+//        final  CollectionReference activePosts =  _firestore.collection('posts');
+//     QuerySnapshot querySnapshotPost = await activePosts.get();
+//     for (DocumentSnapshot doc in querySnapshotPost.docs) {
+//      _posts.add(
+//         PostModel(
+//         userId: doc['userId'],
+//         useremail: doc['useremail'],
+//         type: doc['type'],
+//         photoUrl: doc['photoUrl'] ?? 'No Photo Url',
+//         postId: doc['postId'],
+//         likes: doc['likes'],
+//         ),
+//       );
+//     }
+//       print(_posts);
+//       await Future.delayed(const Duration(milliseconds: 500));
+//       emit(PostLoadedState(allPost: _posts));
+//     }
+
+    
+    likeAdded(PostModel postModel) async
+    { 
+      await _firestore.collection('posts')
+          .doc(postModel.postId)
+          .update(
+            {
+              "likes"   :  FieldValue.arrayUnion([_auth.currentUser!.uid]),
+            }
+          );
+      final newPostModel = 
+      await _firestore.collection('posts')
+           .doc(postModel.postId)
+           .get();
+      
+       final latestModel = PostModel(
+        userId: newPostModel['userId'],
+        useremail: newPostModel['username'],
+        photoUrl: newPostModel['photoUrl'],
+        type: newPostModel['type'], 
+        postId: newPostModel['postId'],
+        likes: newPostModel['likes']);
+      emit(LikesLoadedState(allPostLikes: latestModel));
+      getStoriePosts();
+    }
+
+
+    ///
+    onSendComment(PostModel postModel,String commentText) async
+    {
+      try 
+      {    
+        final  SharedPreferences prefs = await SharedPreferences.getInstance();
+        final String commetId = const Uuid().v1();
+        final Comment sendComment =    Comment(
+                       comment: commentText,
+                       likes: 0,
+                       commentId: commetId,
+                       postId: postModel.postId!,
+                       username: prefs.getString('username')!,
+                       dateTime: DateTime.now(),
+                       profilePic: prefs.getString('profilePic')!,
+                  );
+           await _firestore.collection('posts')
+            .doc(postModel.postId)
+            .collection('comments')
+            .doc(commetId)
+            .set({
+               "comment"      : sendComment.comment,
+               "likes"        : sendComment.likes,
+                "commentId"   : sendComment.commentId,
+                "postId"      : sendComment.postId,
+                "username"    : sendComment.username,
+                "dateTime"    : sendComment.dateTime,
+                "profilePic"  : sendComment.profilePic
+             });
+         getComments(postModel);
+      } 
+      catch(e)
+      {
+        emit(StatusPostErrorState(e.toString()));
+      }
+    }
+ ///
+    getComments(PostModel postModel) async
+    {
+      _comments.clear();
+    final  CollectionReference activeComments =  _firestore.collection('posts').doc(postModel.postId).collection('comments');
+    QuerySnapshot querySnapshotPost = await activeComments.get();
+    for (DocumentSnapshot doc in querySnapshotPost.docs) {
+      Timestamp timestamp = doc['dateTime'];
+    DateTime dateTime = timestamp.toDate();
+     _comments.add(
+        Comment(
+        comment:     doc['comment'], 
+        commentId:   doc['commentId'],
+        postId:      doc['postId'],
+        likes:       doc['likes'],
+        dateTime   : dateTime,
+        profilePic : doc['profilePic'],
+        username   : doc['username'],
+        ),
+      );
+    }
+    _comments.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    emit(CommentsLoadedState(allComments: _comments));
     }
 
 }

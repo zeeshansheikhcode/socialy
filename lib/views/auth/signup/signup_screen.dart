@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
+import 'package:socialy/utils/utils.dart';
 
 import '../../../components/reusable_button.dart';
 
@@ -18,13 +19,14 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
-
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -110,6 +112,56 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: GestureDetector(
+              onTap: ()
+              {
+                BlocProvider.of<AuthCubit>(context).uploadProfilePic();
+              },
+              child: CircleAvatar(
+               // backgroundColor: Colors.blue,
+                maxRadius: 30,
+                foregroundImage: BlocProvider.of<AuthCubit>(context).userImage!=null 
+                ? 
+                FileImage(BlocProvider.of<AuthCubit>(context).userImage!)
+                :
+                const AssetImage('assets/images/sitting.png') as ImageProvider<Object>?
+                ),
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              'Username',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.sp,
+                  color: Colors.black),
+            )
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: TextFormField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+                controller: nameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(width: 5)),
+                )),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Text(
               'Email',
               style: TextStyle(
@@ -166,52 +218,50 @@ class _SignupScreenState extends State<SignupScreen> {
           SizedBox(
             height: 20.h,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.h),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
-                    color: const Color.fromARGB(255, 134, 11, 143)),
+          GestureDetector(
+            onTap: (){
+              Navigator.pushReplacementNamed(context, RoutesName.loginview);
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.h),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  'Go to Login',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                      color: const Color.fromARGB(255, 134, 11, 143)),
+                ),
               ),
             ),
           ),
           SizedBox(
             height: 40.h,
           ),
-          BlocConsumer<AuthCubit, AuthState>(
+  BlocConsumer<AuthCubit, AuthState>(
   listener: (context, state) {
     if (state is AuthLoadedState) {
-      Navigator.pushReplacementNamed(context, RoutesName.homeView);
+      Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
     }
   },
   builder: (context, state) {
-    if (state is AuthLoadingState) {
-      return Center(
-        child: ReusableButton(
-          height: 50.h,
-          width: 300.h,
-          circular: 20,
-          ontap: () {
-            BlocProvider.of<AuthCubit>(context).registerNewUser(
-              emailController.text, passwordController.text);
-          },
-          title: 'Sign_Up'.tr(),
-        ),
-      );
-    }
-    
     return Center(
       child: ReusableButton(
         height: 50.h,
         width: 300.h,
         circular: 20,
         ontap: () {
-          BlocProvider.of<AuthCubit>(context).registerNewUser(
-            emailController.text, passwordController.text);
+          if(emailController.text.isEmpty && passwordController.text.isEmpty && nameController.text.isEmpty)
+          {
+            Utils.showSnackBar("Enter Credential", context);
+            return ;
+          }
+          // if(state is AuthLoadingState)
+          // {
+            BlocProvider.of<AuthCubit>(context).registerNewUser(
+            emailController.text, passwordController.text, nameController.text);
+         // }    
         },
         title: 'Sign_Up'.tr(),
       ),

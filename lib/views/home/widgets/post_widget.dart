@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/app_strings.dart';
 import 'package:socialy/commons/ui_helpers.dart';
 import 'package:socialy/models/post_model.dart';
+import 'package:socialy/utils/utils.dart';
+import 'package:socialy/views/home/comments/comments_view.dart';
 
 import '../../../cubit/status_post_cubit.dart';
 
@@ -23,8 +25,7 @@ class PostWidget extends StatelessWidget {
         {
            return const Center(child: CircularProgressIndicator(),);
         }
-       if(state is StatusPostLoadedState)
-       {
+      
         return Container(
         margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         height: 300.h,
@@ -33,6 +34,15 @@ class PostWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            verticalSpaceTiny,
+            Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  postModel.useremail!,
+                  style: heading2
+                ),
+              ),
+              verticalSpaceTiny,
             Center(
               child: SizedBox(
                 height: 200.h,
@@ -50,23 +60,34 @@ class PostWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.favorite_border_outlined)),
+                    onPressed: () {
+                      BlocProvider.of<StatusPostCubit>(context).likeAdded(postModel);
+                      Utils.showSnackBar('Like Added', context);
+                    },
+                    icon: (state is LikesLoadedState) ? 
+                     const Icon(Icons.favorite_outlined)
+                     :
+                     const Icon(Icons.favorite_border_outlined)
+
+                    
+                     ),
                 horizontalSpaceSmall,
-                IconButton(onPressed: () {}, icon: const Icon(Icons.comment))
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> CommentsView(
+                    postModel: postModel,
+                  )));
+                }, icon: const Icon(Icons.comment))
               ],
             ),
-            TextButton(
-                onPressed: () {},
-                child: Text(
-                  'View all Comments',
+           Text( 
+                  'Likes ${ (state is LikesLoadedState) ? state.allPostLikes!.likes!.length : 0} ',
                   style: heading3,
-                ))
+                )
           ],
         ),
               );
-       }
-          return const SizedBox();
+       
+        //  return const SizedBox();
           
         }
         

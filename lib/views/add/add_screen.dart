@@ -21,7 +21,8 @@ class _AddScreenState extends State<AddScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<StatusPostCubit>(context).getStoriesPosts();
+  //  BlocProvider.of<StatusPostCubit>(context).getPosts();
+    BlocProvider.of<StatusPostCubit>(context).getStoriePosts();
   }
 
   @override
@@ -31,6 +32,7 @@ class _AddScreenState extends State<AddScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          verticalSpaceMassive,
           Center(
               child: Text(
             'Add Status',

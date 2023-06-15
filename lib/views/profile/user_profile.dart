@@ -39,6 +39,7 @@ class _UserProfileState extends State<UserProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              verticalSpaceMassive,
               Center(
                   child: Container(
                 margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
@@ -101,7 +102,53 @@ class _UserProfileState extends State<UserProfile> {
                   child: Text(
                     "Edit Name",
                     style: heading,
-                  )),
+                  )
+                ),
+                
+                verticalSpaceRegular,
+                if(state.userModel!.followers!.isNotEmpty) 
+                ...[
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Align( 
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        textAlign: TextAlign.left,
+                        "Followers List",
+                        style: heading,
+                        ),
+                    ),
+                  ),
+                Expanded(
+                child: ListView.builder(
+                 itemCount: state.userModel!.followers!.length,
+                 itemBuilder: (context,index) 
+                  {
+                     return 
+                     SizedBox(
+                      height: 30,
+                       child: ListTile(
+                       title: Text(state.userModel!.followers![index].toString(), 
+                       style: heading,
+                       ),
+                       trailing: TextButton(
+                        onPressed: ()
+                        {
+                          BlocProvider.of<UserCubit>(context).deleteFollowers(state.userModel!.followers![index].toString());
+                        },
+                        child: const Text('Unfollow',style: TextStyle(color:Colors.black),), 
+                       ),
+                                        ),
+                     );
+                  }
+                 )
+              )
+                ]
+               
+              
+                
+              
+                
             ],
           );
           }

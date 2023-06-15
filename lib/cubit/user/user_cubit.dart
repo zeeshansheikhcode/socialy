@@ -33,7 +33,8 @@ class UserCubit extends Cubit<UserState> {
                         userId: value.data()!['userId'], 
                         useremail: value.data()!['email'],
                         name: value.data()!['username'],
-                        photoUrl: value.data()!['photoUrl'],
+                        photoUrl: value.data()!['profilePic'],
+                        followers: value.data()!['followers']
                         );
                        });  
     emit(UserLoadedState(userModel: userInfo));           
@@ -58,6 +59,7 @@ class UserCubit extends Cubit<UserState> {
                         useremail: value.data()!['email'],
                         name: value.data()!['username'],
                         photoUrl: value.data()!['photoUrl'],
+                        followers: value.data()!['followers']
                         );
                        });  
     emit(UserLoadedState(userModel: userInfo));
@@ -108,4 +110,24 @@ class UserCubit extends Cubit<UserState> {
       {
         emit(UserErrorState(e.toString()));
       }}
+
+    
+    addFollowers(String email) async
+    {
+       final result =  await _firestore.collection('Users')
+                   .doc(_auth.currentUser!.uid)
+                   .update({
+                       "followers": FieldValue.arrayUnion([email]),      
+                    });     
+    }
+    deleteFollowers(String email) async
+    {
+     final result =  await _firestore.collection('Users')
+                   .doc(_auth.currentUser!.uid)
+                   .update({
+                       "followers": FieldValue.arrayRemove([email]),      
+                    });
+     getUserInfo();
+ 
+    }
 }

@@ -166,7 +166,15 @@ class ChatCubit extends Cubit<ChatState> {
         .collection('Users')
         .where('email', isEqualTo: query)
         .get();
-        _searchResult = result.docs.map((e) => e.data()).toList();
+       _searchResult = result.docs.map((doc) {
+        final data = doc.data();
+        return {
+        'email': data['email'],
+        'username': data['username'],
+        'profilePic': data['profilePic'],
+         'userId': data['userId'],
+        };
+        }).toList();
          emit(ChatLoadedState(searchResult: _searchResult));
        }
        catch(e)

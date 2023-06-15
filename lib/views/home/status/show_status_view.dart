@@ -5,8 +5,11 @@ import 'package:story_view/story_view.dart';
 import '../../../models/story_model.dart';
 
 class ShowStatus extends StatefulWidget {
-  const ShowStatus({super.key, required this.showstories});
   final List<StoryModel> showstories;
+  final String username;
+  final String image;
+  const ShowStatus({super.key, required this.username,required this.image, required this.showstories});
+  
   @override
   State<ShowStatus> createState() => _ShowStatusState();
 }
@@ -60,8 +63,13 @@ class _ShowStatusState extends State<ShowStatus> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title:  Text(widget.showstories[0].useremail.toString()),
+        title:  Text(widget.username.toString()),
         centerTitle: true,
+        leading: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  maxRadius: 20,
+                  foregroundImage: NetworkImage(widget.image),
+                ),
         automaticallyImplyLeading: false,
       ),
       body: StoryView(

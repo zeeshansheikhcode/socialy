@@ -5,7 +5,7 @@ class SplashService
   Future<bool> checkingAuthentication() async
   {
     SharedPreferences sp  = await SharedPreferences.getInstance();
-    final email = sp.getString('Email');
+    final email = sp.getString('email');
     print(email);
     if(email != null && email.isNotEmpty)
     {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
+import 'package:socialy/utils/routes/routes_name.dart';
 import 'package:socialy/views/chat/search_screen/search_widget.dart';
 
 import '../../../cubit/chat/chat_cubit.dart';
@@ -77,6 +78,8 @@ class _SearchViewState extends State<SearchView> {
                  {
                    BlocProvider.of<AuthCubit>(context).logOut();
                    searchController.clear();
+                   Navigator.pushNamed(context, RoutesName.loginview);
+
                  },
                  child: Semantics(
                     button: true,
@@ -105,7 +108,9 @@ class _SearchViewState extends State<SearchView> {
                     itemBuilder: (context, index) {
                       return SearchWidget(
                         email: BlocProvider.of<ChatCubit>(context).searchresult[index]['email'],
-                        img: 'A',
+                        img: BlocProvider.of<ChatCubit>(context).searchresult[index]['profilePic'],
+                        username: BlocProvider.of<ChatCubit>(context).searchresult[index]['username'],
+                        userId: BlocProvider.of<ChatCubit>(context).searchresult[index]['userId'],
                       );
                     });
                 }

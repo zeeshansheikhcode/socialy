@@ -6,9 +6,15 @@ class StoryModel
   final String? statusText;
   final String? type;
   final String? photoUrl;
+  final String? username;
+  final String? profilePic;
+  final DateTime? dateTime;
   StoryModel({
    required this.userId,
    required this.useremail,
+   required this.username,
+   required this.profilePic,
+   required this.dateTime,
     this.statusText,
     this.photoUrl,
    required this.type,
@@ -21,6 +27,9 @@ class StoryModel
       'type'       : type, 
       'statusText' : statusText,
       'photoUrl'   : photoUrl,
+      'profilePic' : profilePic,
+      'username'   : username,
+      'dateTime'   : dateTime,
      };
   }
 
@@ -31,6 +40,9 @@ class StoryModel
       type        : json['type'],
       statusText  : json['statusText'],
       photoUrl    : json['photoUrl'], 
+      dateTime    : json['dateTime'],
+      profilePic  : json['profilePic'],
+      username    : json['username']     
     );
   }
 }

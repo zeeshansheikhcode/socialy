@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
+import 'package:socialy/views/add/add_screen.dart';
+import 'package:socialy/views/bottombar/bottom_bar.dart';
+import 'package:socialy/views/chat/search_screen/search_view.dart';
+import 'package:socialy/views/profile/user_profile.dart';
 
 import '../../views/auth/login/login_screen.dart';
 import '../../views/auth/signup/signup_screen.dart';
@@ -22,10 +26,17 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context)  =>    const LoginScreen());
      case RoutesName.homeView :
         return MaterialPageRoute(builder: (BuildContext context)  =>    const HomeView());
-    //   case RoutesName.statusview :
-    //     return MaterialPageRoute(builder: (BuildContext context)  =>   const StatusView());
+      case RoutesName.searchview :
+        return MaterialPageRoute(builder: (BuildContext context)  =>   const SearchView());
       case RoutesName.chatview :
         return MaterialPageRoute(builder: (BuildContext context)  => const  ChatScreen());
+     case RoutesName.profileview :
+        return MaterialPageRoute(builder: (BuildContext context)  => const  UserProfile());
+    case RoutesName.addview :
+        return MaterialPageRoute(builder: (BuildContext context)  => const  AddScreen());
+    case RoutesName.bottombarview :
+        return MaterialPageRoute(builder: (BuildContext context)  => const  BottomNavBar());
+   
     //  case RoutesName.chatpagesqlite :
     //     return MaterialPageRoute(builder: (BuildContext context)  =>   const ChatPage());
    
