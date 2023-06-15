@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/auth/auth_cubit.dart';
 import 'package:socialy/cubit/chat/chat_cubit.dart';
-import 'package:socialy/cubit/status_post_cubit.dart';
+import 'package:socialy/cubit/status_post/status_post_cubit.dart';
 import 'package:socialy/utils/routes/routes.dart';
 import 'package:socialy/utils/routes/routes_name.dart';
 
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             locale: context.locale,
             title: 'First Method',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.purple,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
             initialRoute: RoutesName.splashview,

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/app_strings.dart';
 import 'package:socialy/commons/ui_helpers.dart';
-import 'package:socialy/cubit/status_post_cubit.dart';
+import 'package:socialy/cubit/status_post/status_post_cubit.dart';
 import 'package:socialy/models/post_model.dart';
-import 'package:socialy/views/home/home/home_view.dart';
+import 'package:socialy/utils/routes/routes_name.dart';
 import 'package:socialy/views/home/widgets/comments_box.dart';
 class CommentsView extends StatefulWidget {
   final PostModel postModel;
@@ -40,7 +40,8 @@ class _CommentsViewState extends State<CommentsView> {
           direction: DismissDirection.vertical,
           onDismissed: (_) {
             // Swiped downwards
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomeView()));
+            Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
+            //Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomeView()));
           },
           child: BlocConsumer<StatusPostCubit, StatusPostState>(
             listener: (context, state) {

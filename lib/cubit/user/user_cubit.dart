@@ -58,7 +58,7 @@ class UserCubit extends Cubit<UserState> {
                         userId: value.data()!['userId'], 
                         useremail: value.data()!['email'],
                         name: value.data()!['username'],
-                        photoUrl: value.data()!['photoUrl'],
+                        photoUrl: value.data()!['profilePic'],
                         followers: value.data()!['followers']
                         );
                        });  

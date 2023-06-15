@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/ui_helpers.dart';
 
-import '../../../cubit/status_post_cubit.dart';
+import '../../../cubit/status_post/status_post_cubit.dart';
 import '../../../models/story_model.dart';
 import '../status/show_status_view.dart';
 

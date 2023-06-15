@@ -12,10 +12,10 @@ class AuthInitial extends AuthState {}
 class AuthLoadingState extends AuthState {}
 
 class AuthLoadedState extends AuthState {
-  final bool isAuthenticated;
-  const AuthLoadedState(this.isAuthenticated);
+  final String profilePic;
+  const AuthLoadedState(this.profilePic);
   @override
-  List<Object> get props => [isAuthenticated];
+  List<Object> get props => [profilePic];
 }
 
 class AuthErrorState extends AuthState {

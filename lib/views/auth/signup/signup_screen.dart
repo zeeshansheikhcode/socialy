@@ -117,17 +117,24 @@ class _SignupScreenState extends State<SignupScreen> {
               {
                 BlocProvider.of<AuthCubit>(context).uploadProfilePic();
               },
-              child: CircleAvatar(
-               // backgroundColor: Colors.blue,
-                maxRadius: 30,
-                foregroundImage: BlocProvider.of<AuthCubit>(context).userImage!=null 
-                ? 
-                FileImage(BlocProvider.of<AuthCubit>(context).userImage!)
-                :
-                const AssetImage('assets/images/sitting.png') as ImageProvider<Object>?
-                ),
-            ),
-          ),
+              child: BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state is AuthLoadedState) {
+          return CircleAvatar(
+            maxRadius: 30,
+            foregroundImage: NetworkImage(state.profilePic),
+          );
+        } else {
+          return const CircleAvatar(
+            maxRadius: 30,
+            foregroundImage: AssetImage('assets/images/sitting.png'),
+          );
+        }
+      },
+    ),
+  )
+     ),
+          
           SizedBox(
             height: 10.h,
           ),
@@ -241,9 +248,9 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
   BlocConsumer<AuthCubit, AuthState>(
   listener: (context, state) {
-    if (state is AuthLoadedState) {
-      Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
-    }
+    // if (state is AuthLoadedState) {
+    //   Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
+    // }
   },
   builder: (context, state) {
     return Center(
@@ -257,11 +264,12 @@ class _SignupScreenState extends State<SignupScreen> {
             Utils.showSnackBar("Enter Credential", context);
             return ;
           }
-          // if(state is AuthLoadingState)
-          // {
+          else
+          {
             BlocProvider.of<AuthCubit>(context).registerNewUser(
             emailController.text, passwordController.text, nameController.text);
-         // }    
+            Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
+         }    
         },
         title: 'Sign_Up'.tr(),
       ),

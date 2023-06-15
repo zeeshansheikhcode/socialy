@@ -7,7 +7,7 @@ import 'package:socialy/models/post_model.dart';
 import 'package:socialy/utils/utils.dart';
 import 'package:socialy/views/home/comments/comments_view.dart';
 
-import '../../../cubit/status_post_cubit.dart';
+import '../../../cubit/status_post/status_post_cubit.dart';
 
 class PostWidget extends StatelessWidget {
   final PostModel postModel;
@@ -64,10 +64,7 @@ class PostWidget extends StatelessWidget {
                       BlocProvider.of<StatusPostCubit>(context).likeAdded(postModel);
                       Utils.showSnackBar('Like Added', context);
                     },
-                    icon: (state is LikesLoadedState) ? 
-                     const Icon(Icons.favorite_outlined)
-                     :
-                     const Icon(Icons.favorite_border_outlined)
+                    icon: const Icon(Icons.favorite_border_outlined)
 
                     
                      ),
@@ -80,7 +77,7 @@ class PostWidget extends StatelessWidget {
               ],
             ),
            Text( 
-                  'Likes ${ (state is LikesLoadedState) ? state.allPostLikes!.likes!.length : 0} ',
+                  'Likes ${ postModel.likes!.length} ',
                   style: heading3,
                 )
           ],

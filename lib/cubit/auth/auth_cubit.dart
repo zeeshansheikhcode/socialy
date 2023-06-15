@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 part 'auth_state.dart';
 
@@ -35,11 +36,13 @@ class AuthCubit extends Cubit<AuthState> {
          quality: 10,
        );
        userImage = File(result1!.path);
-       final imageName = _auth.currentUser!.uid;
+       final profileId = const Uuid().v1().substring(0,5);
+       final imageName = profileId;
       final storageReference = FirebaseStorage.instance.ref().child('profilephotos/$imageName');
       await storageReference.putFile(userImage!);
       picUrl = await storageReference.getDownloadURL();
       print('picUrl $picUrl');
+      emit(AuthLoadedState(picUrl!));
        }
       catch(e) 
       {
@@ -73,7 +76,7 @@ class AuthCubit extends Cubit<AuthState> {
         prefs.setString('username' ,  useremail[1]);
         prefs.setString('profilePic', useremail[2]);
         prefs.setString('userId',     useremail[3]);
-      emit(const AuthLoadedState(true));
+      emit( AuthLoadedState(useremail[2]));
     } 
     on FirebaseAuthException catch (e) 
     {
@@ -135,7 +138,7 @@ class AuthCubit extends Cubit<AuthState> {
      prefs.setString('username' , username);
      prefs.setString('profilePic', picUrl!);
      prefs.setString('userId',     user.user!.uid);
-     emit(const AuthLoadedState(true));
+     emit( AuthLoadedState(picUrl!));
      
     } 
     on FirebaseAuthException catch (e)

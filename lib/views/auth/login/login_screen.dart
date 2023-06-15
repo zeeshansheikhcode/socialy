@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart' ;
 import '../../../components/reusable_button.dart';
 import '../../../cubit/auth/auth_cubit.dart';
 import '../../../utils/routes/routes_name.dart';
+import '../../../utils/utils.dart';
 class LoginScreen extends StatefulWidget {
    const LoginScreen({super.key});
 
@@ -177,11 +178,17 @@ class _LoginScreenState extends State<LoginScreen> {
         circular: 20,
         ontap: () {
           
+           if(emailController.text.isEmpty && passwordController.text.isEmpty)
+          {
+            Utils.showSnackBar("Enter Credential", context);
+            return ;
+          }
+          else
+          {
             BlocProvider.of<AuthCubit>(context).signInWithEmailAndPassword(
-            emailController.text, passwordController.text);
-            
-          Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
-  
+            emailController.text, passwordController.text );
+            Navigator.pushReplacementNamed(context, RoutesName.bottombarview);
+         }  
         },
         title: 'Login'.tr(),
       ),

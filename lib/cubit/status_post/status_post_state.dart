@@ -46,14 +46,14 @@ class CommentsLoadedState extends StatusPostState
   List<Object> get props => [allComments!];
 
 }
-class LikesLoadedState extends StatusPostState 
-{
-   final PostModel? allPostLikes;
-   const LikesLoadedState({this.allPostLikes});
-   @override
-  List<Object> get props => [allPostLikes!];
+// class LikesLoadedState extends StatusPostState 
+// {
+//    final PostModel? allPostLikes;
+//    const LikesLoadedState({this.allPostLikes});
+//    @override
+//   List<Object> get props => [allPostLikes!];
 
-}
+// }
 class StatusPostErrorState extends StatusPostState {
   final String? errorMessage;
   const StatusPostErrorState(this.errorMessage);

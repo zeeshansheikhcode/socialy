@@ -29,7 +29,7 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Home View'),
+          title: const Text('Search View'),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),

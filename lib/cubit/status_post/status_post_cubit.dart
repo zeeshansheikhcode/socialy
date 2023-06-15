@@ -10,8 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/post_model.dart';
-import '../models/story_model.dart';
+import '../../models/post_model.dart';
+import '../../models/story_model.dart';
 
 part 'status_post_state.dart';
 
@@ -31,7 +31,7 @@ class StatusPostCubit extends Cubit<StatusPostState> {
   List<String> uniqueEmail =[];
   File? _imageFile;
   bool isLoading = false;
-
+  final List<PostModel> myPost =[];
   final picker = ImagePicker();
 
   Future<void> pickImage({required isStatus}) async {
@@ -63,6 +63,7 @@ class StatusPostCubit extends Cubit<StatusPostState> {
     try {
       if(isStatus)
       {
+      final  SharedPreferences prefs = await SharedPreferences.getInstance();
       final imageName = DateTime.now().microsecondsSinceEpoch.toString();
       final storageReference = FirebaseStorage.instance.ref().child('userstories/$imageName');
       await storageReference.putFile(_imageFile!);
@@ -76,14 +77,20 @@ class StatusPostCubit extends Cubit<StatusPostState> {
               "type"       :  "photo",
               "statusText" :  "No Text",
               "photoUrl"   :  downloadUrl,
-              "likes"      : []
+              "profilePic" :  prefs.getString('profilePic'),
+              "dateTime"   :  DateTime.now(),
+              "username"   :  prefs.getString('username'),
+          
+              
             }
           );
      isLoading = false;
      getStoriePosts();
       }
     else 
-    { final String postid = const Uuid().v1();
+    { 
+
+      final String postid = const Uuid().v1();
       final imageName = DateTime.now().microsecondsSinceEpoch.toString();
       final storageReference = FirebaseStorage.instance.ref().child('userspost/$imageName');
       await storageReference.putFile(_imageFile!);
@@ -107,6 +114,7 @@ class StatusPostCubit extends Cubit<StatusPostState> {
       emit(StatusPostErrorState(e.toString()));
     }
   }
+
  //Upload Status
   void uploadStatus(String statusText) async 
   {
@@ -130,7 +138,6 @@ class StatusPostCubit extends Cubit<StatusPostState> {
             }
           );
      getStoriePosts();
-     
     }
     catch(e)
     {
@@ -193,7 +200,7 @@ class StatusPostCubit extends Cubit<StatusPostState> {
      _stories.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
   
      
-       final  CollectionReference activePosts =  _firestore.collection('posts');
+    final  CollectionReference activePosts =  _firestore.collection('posts');
     QuerySnapshot querySnapshotPost = await activePosts.get();
     for (DocumentSnapshot doc in querySnapshotPost.docs) {
      _posts.add(
@@ -205,9 +212,15 @@ class StatusPostCubit extends Cubit<StatusPostState> {
         postId: doc['postId'],
         likes: doc['likes'],
         ),
-      );
-    }
-      print(_posts);
+       );
+      }
+     for(int i=0; i < _posts.length; i++)
+     {
+       if(_posts[i].useremail==_auth.currentUser!.email)
+        {
+          myPost.add(_posts[i]);
+        }
+     }
       emit(StatusPostLoadedState(allStories:allStories, allPost: _posts));
     }
   //  getPostsAndStories()
@@ -296,19 +309,10 @@ class StatusPostCubit extends Cubit<StatusPostState> {
               "likes"   :  FieldValue.arrayUnion([_auth.currentUser!.uid]),
             }
           );
-      final newPostModel = 
       await _firestore.collection('posts')
            .doc(postModel.postId)
            .get();
       
-       final latestModel = PostModel(
-        userId: newPostModel['userId'],
-        useremail: newPostModel['username'],
-        photoUrl: newPostModel['photoUrl'],
-        type: newPostModel['type'], 
-        postId: newPostModel['postId'],
-        likes: newPostModel['likes']);
-      emit(LikesLoadedState(allPostLikes: latestModel));
       getStoriePosts();
     }
 

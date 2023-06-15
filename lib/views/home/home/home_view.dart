@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/ui_helpers.dart';
 import 'package:socialy/views/home/widgets/status_widget.dart';
 
-import '../../../cubit/status_post_cubit.dart';
+import '../../../cubit/status_post/status_post_cubit.dart';
 import '../widgets/post_widget.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,62 +20,67 @@ class _HomeViewState extends State<HomeView> {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<StatusPostCubit>(context).getStoriePosts();
-    // BlocProvider.of<StatusPostCubit>(context).getPosts();
-    // BlocProvider.of<StatusPostCubit>(context).getStories();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: [
-        verticalSpaceSmall,
-
-        BlocBuilder<StatusPostCubit, StatusPostState>(
-          builder: (context, state) {
-            if (state is StatusPostLoadingState) {
-              return const CircularProgressIndicator.adaptive();
-            }
-            return SizedBox(
-              height: 120.h,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: BlocProvider.of<StatusPostCubit>(context)
-                    .uniqueEmail
-                    .length,
-                itemBuilder: ((context, index) {
-                  return StatusWidget(
-                    allStories: BlocProvider.of<StatusPostCubit>(context)
-                        .allStories[index],
-                  );
-                }),
-              ),
-            );
-          },
-        ),
-        verticalSpaceTiny,
-        BlocBuilder<StatusPostCubit, StatusPostState>(
-          builder: (context, state) {
-            if (state is StatusPostLoadingState) {
-              return const CircularProgressIndicator.adaptive();
-            }
-            return Expanded(
-              child: SizedBox(
-                child: ListView.builder(
-                  itemCount:
-                      BlocProvider.of<StatusPostCubit>(context).posts.length,
-                  itemBuilder: (context, index) {
-                    return PostWidget(
-                      postModel: BlocProvider.of<StatusPostCubit>(context)
-                          .posts[index],
-                    );
-                  },
+    return Scaffold(body: BlocBuilder<StatusPostCubit, StatusPostState>(
+      builder: (context, state) {
+        return  state is StatusPostLoadingState ?
+                   const SizedBox(
+                       
+                       child: Center(child: CircularProgressIndicator.adaptive()))
+                
+        :
+        Column(
+          children: [
+            verticalSpaceSmall,
+            const Divider(
+              color: Colors.purple,
+              thickness: 3,
+             ),
+            
+                SizedBox(
+                  height: 100.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: BlocProvider.of<StatusPostCubit>(context)
+                        .uniqueEmail
+                        .length,
+                    itemBuilder: ((context, index) {
+                      return StatusWidget(
+                        allStories: BlocProvider.of<StatusPostCubit>(context)
+                            .allStories[index],
+                      );
+                    }),
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
-    ));
+            const Divider(
+              color: Colors.purple,
+              thickness: 3,
+            ),
+            verticalSpaceTiny,
+                 Expanded(
+                  child: SizedBox(
+                    child: ListView.builder(
+                      itemCount: BlocProvider.of<StatusPostCubit>(context)
+                          .posts
+                          .length,
+                      itemBuilder: (context, index) {
+                        return PostWidget(
+                          postModel: BlocProvider.of<StatusPostCubit>(context)
+                              .posts[index],
+                        );
+                      },
+                    ),
+                  ),
+                  )] 
+               );
+              }
+          )   
+        );    
+      }
+      
+    
   }
-}
+

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/cubit/user/user_cubit.dart';
+import 'package:socialy/utils/utils.dart';
 
 import '../../../cubit/chat/chat_cubit.dart';
 import '../../../utils/routes/routes_name.dart';
@@ -30,7 +31,7 @@ class SearchWidget extends StatelessWidget {
           width: 250.w,
           margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 226, 37, 160),
+              color:  Colors.purple,
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               border: Border.all(
                 color: Colors.black,
@@ -49,6 +50,7 @@ class SearchWidget extends StatelessWidget {
             trailing: TextButton(onPressed: ()
             {
               BlocProvider.of<UserCubit>(context).addFollowers(email);
+              Utils.showSnackBar('Following', context);
               
             },
             child: const Text('Follow',

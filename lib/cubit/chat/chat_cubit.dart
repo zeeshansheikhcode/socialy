@@ -99,10 +99,12 @@ class ChatCubit extends Cubit<ChatState> {
           .collection('chatroom')
           .doc(realchatRoomId)
           .collection('chats').doc(filename).set({
+         "userId" : _auth.currentUser!.uid,    
         "sendby": _auth.currentUser!.email,
         "message": "",
         "type" : "img",
         "time": FieldValue.serverTimestamp(),
+        "sent" : 1
 
           });
 

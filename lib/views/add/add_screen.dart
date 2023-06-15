@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialy/commons/app_strings.dart';
 import 'package:socialy/commons/ui_helpers.dart';
 import 'package:socialy/components/reusable_button.dart';
-import 'package:socialy/cubit/status_post_cubit.dart';
+import 'package:socialy/cubit/status_post/status_post_cubit.dart';
 import 'package:socialy/views/home/widgets/post_widget.dart';
 
 class AddScreen extends StatefulWidget {
@@ -90,12 +90,12 @@ class _AddScreenState extends State<AddScreen> {
                       .pickImage(isStatus: true);
                 },
               ),
-              ReusableButton(
-                title: 'Video',
-                height: 50.h,
-                width: 60.w,
-                circular: 10,
-              ),
+              // ReusableButton(
+              //   title: 'Video',
+              //   height: 50.h,
+              //   width: 60.w,
+              //   circular: 10,
+              // ),
             ],
           ),
           verticalSpaceSmall,
@@ -116,7 +116,7 @@ class _AddScreenState extends State<AddScreen> {
             },
           ),
           verticalSpaceSmall,
-          Center(child: Text('Tap on Post to delete ',style: heading,),),
+          Center(child: Text('All Posts ',style: heading,),),
           verticalSpaceTiny,
           Expanded(
             child: BlocConsumer<StatusPostCubit, StatusPostState>(
